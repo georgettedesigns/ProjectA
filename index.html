@@ -4,14 +4,53 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" type="image/x-icon" href="favicon.ico">
-	<link rel="stylesheet" type="text/css" href="css/styles.css">
-  	<title></title>
+  	<title>Quick Start</title>
+	<style></style>
 </head>
 <body>
-	<div class="ie-section">
-		<div class="logo"><img src="images/profile-logo.png" class="img-responsive logo"></div>
-		<img src="images/slider/slider1.jpg"/>
-		<p class="tc ie-text">Profile is only optimized to run on versions of Internet Explorer 9.0 or above. Should you wish to contact Profile, you can send an email to: <a href="#">infopmsr.com</a></p>
-	</div>
+	<h1 id="title"></h1>
+	<pre id="person"></pre>
+	<ul id="list"></ul>
+	<script src="https://www.gstatic.com/firebasejs/3.7.4/firebase.js"></script>
+	<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyAKu7hp8qqSR9gVWHgYu7DTaumBtBoXXxE",
+    authDomain: "dashboard-d8a8e.firebaseapp.com",
+    databaseURL: "https://dashboard-d8a8e.firebaseio.com",
+    projectId: "dashboard-d8a8e",
+    storageBucket: "dashboard-d8a8e.appspot.com",
+    messagingSenderId: "32824274662"
+  };
+	firebase.initializeApp(config);
+		//Functions
+	//A--sync h1 text to real time data base
+	var title = document.getElementById('title');
+	var dbRef = firebase.database().ref().child('text');
+	dbRef.on('value', snap => title.innerText = snap.val());
+
+	//B--object with children
+	var person = document.getElementById('person');
+	var preRef = firebase.database().ref().child('person');
+	//preRef.on('value', snap => console.log(snap.val())); log to console
+	preRef.on('value', snap => {
+		person.innerText = JSON.stringify(snap.val(), null, 3);//the 3 is the format spacing when the object displays
+	});
+
+	//C--make a list (check index html2)
+	const dbRefList = preRef.child('hobbies');
+	
+	dbRefList.on('child_added', snap => console.log(snap.val()));
+
+	</script>
 </body>
 </html>
+<!--
+	Tutorial quick start e.g A h1
+	https://www.youtube.com/watch?v=k1D0_wFlXgo
+	value Events e.g B <pre>
+	https://www.youtube.com/watch?v=noB98K6A0TY
+	child_added e.g C ul list
+	https://www.youtube.com/watch?v=dBscwaqNPuk
+
+-->
